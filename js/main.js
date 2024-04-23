@@ -32,13 +32,21 @@ productos.forEach((product) => {
     content.append(comprar);
 
     comprar.addEventListener("click", () => {
-        carrito.push({
-            id: product.id,
-            img: product.img,
-            nombre: product.nombre,
-            precio: product.precio,
-            cantidad: 1
-        });
+        // Verificar si el producto ya está en el carrito
+        const existingProduct = carrito.find(item => item.id === product.id);
+        if (existingProduct) {
+            // Si el producto ya está en el carrito, aumentar su cantidad
+            existingProduct.cantidad++;
+        } else {
+            // Si el producto no está en el carrito, agregarlo con cantidad 1
+            carrito.push({
+                id: product.id,
+                img: product.img,
+                nombre: product.nombre,
+                precio: product.precio,
+                cantidad: 1
+            });
+        }
         console.log("Producto agregado al carrito:", carrito);
         guardarCarrito(); // Guardar el carrito en localStorage después de agregar un producto
     });
@@ -97,7 +105,7 @@ verCarrito.addEventListener("click", () => {
         eliminarButton.addEventListener("click", () => {
             // Eliminar el producto del carrito y actualizar el precio total
             console.log("Antes de eliminar:", carrito);
-            carrito.splice(index, 1);
+            carrito = carrito.filter(item => item.id !== product.id);
             console.log("Después de eliminar:", carrito);
             carritoContent.remove();
             actualizarPrecioTotal();
